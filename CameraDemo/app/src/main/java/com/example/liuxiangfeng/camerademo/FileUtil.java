@@ -31,14 +31,19 @@ public class FileUtil {
         }
         return storagePath;
     }
+    /**
+     * create bitmap file name
+     */
+    public static String createJpegName(long dataTake){
+        String path = initPath();
+        String jpegName = path + "/" + dataTake +".jpg";
+        Log.i(TAG, "createJpegName:jpegName = " + jpegName);
+        return jpegName;
+    }
     /**保存Bitmap到sdcard
      * @param data
      */
-    public static void saveBitmap(byte[] data){
-
-        String path = initPath();
-        long dataTake = System.currentTimeMillis();
-        String jpegName = path + "/" + dataTake +".jpg";
+    public static void saveBitmap(String jpegName, byte[] data){
         Log.i(TAG, "saveBitmap:jpegName = " + jpegName);
         try {
             FileOutputStream fos = new FileOutputStream(jpegName);

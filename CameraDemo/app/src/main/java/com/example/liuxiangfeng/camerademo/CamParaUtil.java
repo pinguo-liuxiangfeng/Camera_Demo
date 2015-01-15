@@ -1,9 +1,12 @@
 package com.example.liuxiangfeng.camerademo;
 
 import android.hardware.Camera;
+import android.preference.ListPreference;
 import android.util.Log;
 import android.util.Size;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,57 +14,81 @@ import java.util.List;
  */
 public class CamParaUtil {
     private static final String TAG = "CamParaUtil";
-//    private CameraSizeComparator sizeComparator = new CameraSizeComparator();
-    private static CamParaUtil myCamPara = null;
-    private CamParaUtil(){
+    public static void filterUnsupportedOptions(ListPreference pref,
+                                                      List<String> supported){
+        Log.d(TAG,"filterUnsupportedOptions");
+        CharSequence[] prefEntries = pref.getEntries();
+        CharSequence[] prefEntryValues = pref.getEntryValues();
+        Log.d(TAG,"prefEntries="+prefEntries);
+        Log.d(TAG,"prefEntryValues="+prefEntryValues);
+        Log.d(TAG,"supported="+supported);
+        ArrayList<CharSequence> entries = new ArrayList<CharSequence>();
+        ArrayList<CharSequence> entryValues = new ArrayList<CharSequence>();
+        for (int i = 0, len = prefEntryValues.length; i < len; i++) {
+            if (supported.indexOf(prefEntryValues[i].toString()) >= 0) {
+                entries.add(prefEntries[i]);
+                entryValues.add(prefEntryValues[i]);
+            }
+        }
+        int size = entries.size();
+        prefEntries = entries.toArray(new CharSequence[size]);
+        prefEntryValues = entryValues.toArray(new CharSequence[size]);
+        pref.setEntries(prefEntries);
+        pref.setEntryValues(prefEntryValues);
+    }
 
-    }
-    public static CamParaUtil getInstance(){
-        if(myCamPara == null){
-            myCamPara = new CamParaUtil();
-            return myCamPara;
+    public static Camera.Size getPropPreviewSize(Camera.Parameters params, int width, int height){
+        Log.i(TAG, "getPropPreviewSize:width = " + width + " height = " + height);
+        List<Camera.Size> previewSizes = params.getSupportedPreviewSizes();
+        int wd=0,hd=0,tempwd=0, temphd=0;
+        Camera.Size size = previewSizes.get(0);
+        for(int i=0; i< previewSizes.size(); i++){
+            Camera.Size s = previewSizes.get(i);
+            tempwd = Math.abs(s.width-width);
+            temphd = Math.abs(s.height-height);
+            if(0==i){
+                wd = Math.abs(s.width-width);
+                hd = Math.abs(s.height-height);
+            }
+            if((tempwd <= wd) || (temphd <= hd) ){
+                size = s;
+                wd = tempwd;
+                hd = temphd;
+            }
         }
-        else{
-            return myCamPara;
+        //just for special case error.
+        Camera.Size temp = previewSizes.get(0);
+        if(size.width>temp.width){
+            size = temp;
         }
+        return size;
     }
-//    public  Size getPropPreviewSize(List<Camera.Size> list, float th, int minWidth){
-//        Collections.sort(list, sizeComparator);
-//
-//        int i = 0;
-//        for(Size s:list){
-//            if((s.width >= minWidth) && equalRate(s, th)){
-//                Log.i(TAG, "PreviewSize:w = " + s.width + "h = " + s.height);
-//                break;
-//            }
-//            i++;
-//        }
-//        if(i == list.size()){
-//            i = 0;//如果没找到，就选最小的size
-//        }
-//        return list.get(i);
-//    }
-//    public Size getPropPictureSize(List<Camera.Size> list, float th, int minWidth){
-//        Collections.sort(list, sizeComparator);
-//
-//        int i = 0;
-//        for(Size s:list){
-//            if((s.width >= minWidth) && equalRate(s, th)){
-//                Log.i(TAG, "PictureSize : w = " + s.width + "h = " + s.height);
-//                break;
-//            }
-//            i++;
-//        }
-//        if(i == list.size()){
-//            i = 0;//如果没找到，就选最小的size
-//        }
-//        return list.get(i);
-//    }
+    public static Camera.Size getPropPictureSize(Camera.Parameters params, int width, int height){
+        Log.i(TAG, "pictureSizes:width = " + width + " height = " + height);
+        List<Camera.Size> pictureSizes = params.getSupportedPictureSizes();
+        int wd=0,hd=0,tempwd=0, temphd=0;
+        Camera.Size size = pictureSizes.get(0);
+        for(int i=0; i< pictureSizes.size(); i++){
+            Camera.Size s = pictureSizes.get(i);
+            tempwd = Math.abs(s.width-width);
+            temphd = Math.abs(s.height-height);
+            if(0==i){
+                wd = Math.abs(s.width-width);
+                hd = Math.abs(s.height-height);
+            }
+            if((tempwd <= wd) || (temphd <= hd) ){
+                size = s;
+                wd = tempwd;
+                hd = temphd;
+            }
+        }
+        return size;
+    }
 
     /**打印支持的previewSizes
      * @param params
      */
-    public  void printSupportPreviewSize(Camera.Parameters params){
+    public static void printSupportPreviewSize(Camera.Parameters params){
         List<Camera.Size> previewSizes = params.getSupportedPreviewSizes();
         for(int i=0; i< previewSizes.size(); i++){
             Camera.Size size = previewSizes.get(i);
@@ -73,7 +100,7 @@ public class CamParaUtil {
     /**打印支持的pictureSizes
      * @param params
      */
-    public  void printSupportPictureSize(Camera.Parameters params){
+    public static void printSupportPictureSize(Camera.Parameters params){
         List<Camera.Size> pictureSizes = params.getSupportedPictureSizes();
         for(int i=0; i< pictureSizes.size(); i++){
             Camera.Size size = pictureSizes.get(i);
@@ -84,7 +111,7 @@ public class CamParaUtil {
     /**打印支持的聚焦模式
      * @param params
      */
-    public void printSupportFocusMode(Camera.Parameters params){
+    public static void printSupportFocusMode(Camera.Parameters params){
         List<String> focusModes = params.getSupportedFocusModes();
         for(String mode : focusModes){
             Log.i(TAG, "focusModes--" + mode);
