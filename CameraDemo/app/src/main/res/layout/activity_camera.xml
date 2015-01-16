@@ -3,5 +3,13 @@
     android:id="@+id/frag_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
+    <fragment android:name="com.example.liuxiangfeng.camerademo.CameraFragment"
+        android:id="@+id/cameraFrag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <fragment android:name="com.example.liuxiangfeng.camerademo.SettingFragment"
+        android:id="@+id/settingFrag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </FrameLayout>

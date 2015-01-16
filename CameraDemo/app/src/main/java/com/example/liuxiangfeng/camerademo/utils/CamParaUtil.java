@@ -1,4 +1,4 @@
-package com.example.liuxiangfeng.camerademo;
+package com.example.liuxiangfeng.camerademo.utils;
 
 import android.hardware.Camera;
 import android.preference.ListPreference;
@@ -19,8 +19,6 @@ public class CamParaUtil {
         Log.d(TAG,"filterUnsupportedOptions");
         CharSequence[] prefEntries = pref.getEntries();
         CharSequence[] prefEntryValues = pref.getEntryValues();
-        Log.d(TAG,"prefEntries="+prefEntries);
-        Log.d(TAG,"prefEntryValues="+prefEntryValues);
         Log.d(TAG,"supported="+supported);
         ArrayList<CharSequence> entries = new ArrayList<CharSequence>();
         ArrayList<CharSequence> entryValues = new ArrayList<CharSequence>();
@@ -35,6 +33,8 @@ public class CamParaUtil {
         prefEntryValues = entryValues.toArray(new CharSequence[size]);
         pref.setEntries(prefEntries);
         pref.setEntryValues(prefEntryValues);
+        //add for set default value.
+        pref.setDefaultValue(entries.get(0));
     }
 
     public static Camera.Size getPropPreviewSize(Camera.Parameters params, int width, int height){

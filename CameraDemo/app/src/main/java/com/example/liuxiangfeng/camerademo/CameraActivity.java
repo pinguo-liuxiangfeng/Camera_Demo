@@ -2,26 +2,17 @@ package com.example.liuxiangfeng.camerademo;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
 
-import java.io.File;
+import com.example.liuxiangfeng.camerademo.utils.Util;
+
 import java.io.IOException;
-import java.util.List;
 
 
 public class CameraActivity extends Activity implements CameraFragment.onBtnClickedListener,
@@ -40,6 +31,10 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     // We use a thread in ImageSaver to do the work of saving images and
     // generating thumbnails. This reduces the shot-to-shot time.
     private ImageSaverThread mImageSaver;
+    private CameraFragment mCameraFragment;
+    private SettingFragment mSettingFragment;
+    private Preference mPictureSizePref;
+    private boolean isInitialedFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +54,22 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
             if(null!=savedInstanceState){
                 return;
             }
-            //Create an instance of cameraFragment
-            CameraFragment cameraFragment = new CameraFragment();
-            //In case this activity was started with special instructions from an intent
-            //pass the intent's extras to the fragment as arguments
-//            cameraFragment.setArguments(getIntent().getExtras());
-            //Add the fragment to the 'fragment_container' framelayout
-            int commit = getFragmentManager().beginTransaction()
-                    .add(R.id.frag_container, cameraFragment).commit();
-            Log.d(TAG,"commit result = "+commit);
+//            //Create an instance of cameraFragment
+//            mCameraFragment = new CameraFragment();
+//            mSettingFragment = new SettingFragment();
+//            //In case this activity was started with special instructions from an intent
+//            //pass the intent's extras to the fragment as arguments
+////            cameraFragment.setArguments(getIntent().getExtras());
+//            //Add the fragment to the 'fragment_container' framelayout
+//            int commit = getFragmentManager().beginTransaction()
+//                    .add(R.id.frag_container, mCameraFragment).commit();
+//            Log.d(TAG,"commit result = "+commit);
+            mCameraFragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.cameraFrag);
+            mSettingFragment = (SettingFragment) getFragmentManager().findFragmentById(R.id.settingFrag);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.hide(mSettingFragment);
+            transaction.show(mCameraFragment);
+            transaction.commit();
         }
         // Make sure camera device is opened.
         try {
@@ -105,6 +107,9 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     @Override
     protected void onStart() {
         super.onStart();
+        if((!isInitialedFlag)&&(null!=mPictureSizePref)){
+            mSettings.initPreference((ListPreference) mPictureSizePref);
+        }
     }
     @Override
     protected void onPause() {
@@ -135,15 +140,20 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         Log.d(TAG,"onPreferenceChange, newValue="+newValue);
-        preference.setDefaultValue(newValue);
         changePicSize((String) newValue);
         return false;
     }
 
     @Override
     public void initialPref(Preference pref) {
-        Log.d(TAG,"initialPref.");
-        mSettings.initPreference((android.preference.ListPreference) pref);
+        Log.d(TAG,"initialPref.mSettings="+mSettings);
+        if(null != mSettings) {
+            mSettings.initPreference((android.preference.ListPreference) pref);
+            isInitialedFlag = true;
+        }else{
+            mPictureSizePref = pref;
+            isInitialedFlag = false;
+        }
     }
 
 
@@ -187,11 +197,18 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
      * UI:open setting display window.
      */
     public void openSettingsFlag(){
-        SettingFragment settingFragment = new SettingFragment();
+//        SettingFragment settingFragment = new SettingFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.frag_container, settingFragment);
-        transaction.addToBackStack(null);
+//        transaction.replace(R.id.frag_container, mSettingFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+        Log.d(TAG,"openSettingsFlag.....");
+        transaction.hide(mCameraFragment);
+        transaction.show(mSettingFragment);
         transaction.commit();
+        if((!isInitialedFlag)&&(mPictureSizePref!=null)){
+            mSettings.initPreference((ListPreference) mPictureSizePref);
+        }
     }
 
     /**start to preview
@@ -204,9 +221,11 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
             return;
         }
         if(mCamera != null){
-            initCameraParams();
+//            initCameraParams();
             try {
+                mCamera.setDisplayOrientation(90);
                 mCamera.setPreviewDisplay(holder);
+                mCamera.setParameters(mSettings.getmParameters());
                 mCamera.startPreview();//开启预览
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -321,104 +340,54 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
             }
         }
     };
-    /**
-     * set focus mode
-     **/
-    public void initCameraParams(){
-        if(mCamera != null) {
-            mParams = mCamera.getParameters();
-            mParams.setPictureFormat(PixelFormat.JPEG);//设置拍照后存储的图片格式
-//            mParams.setPreviewSize(3840,2160);
-//            mParams.setPictureSize(4000,3000);
-            mCamera.setDisplayOrientation(90);
-            mCamera.setParameters(mParams);
-        }
-    }
+//    /**
+//     * set focus mode
+//     **/
+//    public void initCameraParams(){
+//        if(mCamera != null) {
+//            mParams = mCamera.getParameters();
+//            mParams.setPictureFormat(PixelFormat.JPEG);//设置拍照后存储的图片格式
+////            mParams.setPreviewSize(3840,2160);
+////            mParams.setPictureSize(4000,3000);
+//            mCamera.setDisplayOrientation(90);
+//            mCamera.setParameters(mParams);
+//        }
+//    }
     /**
      * set focus mode
      **/
     public void setFocusMode(){
+        mSettings.updateFocusModeParams();
         if(mCamera != null) {
-            mParams = mCamera.getParameters();
-            //Todo:设置FocusMode
-            CamParaUtil.printSupportFocusMode(mParams);
-            List<String> focusModes = mParams.getSupportedFocusModes();
-            if (focusModes.contains("auto")) {
-                mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            }
-            mCamera.setParameters(mParams);
+            mCamera.setParameters(mSettings.getmParameters());
         }
     }
-//    /**
-//     * set preview size
-//     **/
-//    private void setPreviewSize(int width, int height){
-//        Log.d(TAG,"setPreviewSize");
-//        if(mCamera != null) {
-//            mParams = mCamera.getParameters();
-////            CamParaUtil.printSupportPreviewSize(mParams);
-//            //Todo:设置PreviewSize和PictureSize
-//            mParams.setPreviewSize(width,height);
-//            mCamera.setParameters(mParams);
-//        }
-//    }
-//    /**
-//     * set focus mode
-//     **/
-//    private void setPictureSize(int width, int height){
-//        Log.d(TAG,"setPictureSize");
-//        if(mCamera != null) {
-//            mParams = mCamera.getParameters();
-////            CamParaUtil.printSupportPictureSize(mParams);
-//            //Todo:设置PreviewSize和PictureSize
-//            mParams.setPictureSize(width,height);
-//            mCamera.setParameters(mParams);
-//        }
-//    }
     /**
      * room
      */
     public void zoom(int progress){
+        mSettings.updateZoomParams(progress);
         if(mCamera != null) {
-            mParams = mCamera.getParameters();
-            if(!mParams.isZoomSupported()){
-                Log.e(TAG,"Don't support zoom !");
-                return;
-            }
-            int value = (mParams.getMaxZoom()*progress)/100;
-            Log.d(TAG,"zoom value="+value);
-            mParams.setZoom(value);
-            //Todo:设置PreviewSize和PictureSize
-            mCamera.setParameters(mParams);
-
-        }
-    }
-    /**
-     * change picture size
-     */
-    public void changePicSize(int width, int height){
-        Log.d(TAG,"changePicSize");
-        if(mCamera != null) {
-            mParams = mCamera.getParameters();
-            //Todo:设置PreviewSize和PictureSize
-            Camera.Size s = CamParaUtil.getPropPreviewSize(mParams, width, height);
-            Log.d(TAG, "getPropPreviewSize, width=" + s.width + ", height=" + s.height);
-            mParams.setPreviewSize(s.width, s.height);
-            s = CamParaUtil.getPropPictureSize(mParams, width, height);
-            Log.d(TAG, "getPropPictureSize, width=" + s.width + ", height=" + s.height);
-            mParams.setPictureSize(s.width, s.height);
-            mCamera.setParameters(mParams);
+            mCamera.setParameters(mSettings.getmParameters());
         }
     }
     /**
      * change picture size
      */
     public void changePicSize(String size){
-        int index = size.indexOf('x');
-        if (index == -1) return;
-        int width = Integer.parseInt(size.substring(0, index));
-        int height = Integer.parseInt(size.substring(index + 1));
-        Log.d(TAG, "changePicSize, width=" + width + ", height=" + height);
-        changePicSize(width, height);
+        mSettings.updatePicSizeParams(size);
+        if(mCamera != null) {
+            mCamera.setParameters(mSettings.getmParameters());
+        }
+    }
+    public void onBackPressed() {
+        boolean isHidden = mSettingFragment.isHidden();
+        Log.d(TAG,"onBackPressed, isHidden="+isHidden);
+        if(!isHidden){
+            getFragmentManager().beginTransaction().hide(mSettingFragment).commit();
+            getFragmentManager().beginTransaction().show(mCameraFragment).commit();
+        }else{
+            super.onBackPressed();
+        }
     }
 }

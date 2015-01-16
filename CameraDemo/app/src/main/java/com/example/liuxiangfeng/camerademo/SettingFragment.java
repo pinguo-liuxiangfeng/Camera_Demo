@@ -37,6 +37,9 @@ public class SettingFragment extends PreferenceFragment {
         public void initialPref(Preference pref);
     };
 
+    public SettingFragment(){
+
+    }
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -48,6 +51,12 @@ public class SettingFragment extends PreferenceFragment {
         if(null != mPictureSizePref) {
             mPictureSizePref.setOnPreferenceChangeListener(mListener);
             mInterface.initialPref(mPictureSizePref);
+            String value = mPictureSizePref.getValue();
+            Log.d(TAG,"default value is "+value);
+            if(null == value){
+                mPictureSizePref.setValueIndex(0);
+                Log.d(TAG,"default value is "+value);
+            }
         }
     }
     @Override
@@ -63,6 +72,7 @@ public class SettingFragment extends PreferenceFragment {
         Log.d(TAG, "onAttach.");
         mListener = (Preference.OnPreferenceChangeListener) activity;
         mInterface = (onSettingsInterface) activity;
+
     }
 
     @Override

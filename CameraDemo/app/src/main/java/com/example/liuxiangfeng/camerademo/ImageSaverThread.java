@@ -1,9 +1,8 @@
 package com.example.liuxiangfeng.camerademo;
 
-import android.content.pm.ActivityInfo;
-import android.location.Location;
-import android.net.Uri;
 import android.util.Log;
+
+import com.example.liuxiangfeng.camerademo.utils.FileUtil;
 
 import java.util.ArrayList;
 /**

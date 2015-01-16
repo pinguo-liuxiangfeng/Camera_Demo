@@ -1,4 +1,4 @@
-package com.example.liuxiangfeng.camerademo;
+package com.example.liuxiangfeng.camerademo.utils;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
