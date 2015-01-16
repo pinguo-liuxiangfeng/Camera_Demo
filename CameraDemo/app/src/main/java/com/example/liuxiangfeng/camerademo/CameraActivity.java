@@ -406,7 +406,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
                 zoom(true);
                 return true;
         }
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
 }
