@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 
 import com.example.liuxiangfeng.camerademo.utils.Util;
@@ -371,6 +372,12 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
             mCamera.setParameters(mSettings.getmParameters());
         }
     }
+    public void zoom(boolean isUp){
+        mSettings.updateZoomParams(isUp);
+        if(mCamera != null) {
+            mCamera.setParameters(mSettings.getmParameters());
+        }
+    }
     /**
      * change picture size
      */
@@ -390,4 +397,16 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
             super.onBackPressed();
         }
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                zoom(false);
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                zoom(true);
+                return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
 }

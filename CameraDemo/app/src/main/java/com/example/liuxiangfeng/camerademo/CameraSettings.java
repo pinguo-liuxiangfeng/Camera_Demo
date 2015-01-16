@@ -126,8 +126,35 @@ public class CameraSettings {
                 return;
             }
             int value = (mParameters.getMaxZoom()*progress)/100;
+            Log.d(TAG,"zoom progress="+progress);
             Log.d(TAG,"zoom value="+value);
+            Log.d(TAG,"zoom mParameters.getMaxZoom()="+mParameters.getMaxZoom());
             mParameters.setZoom(value);
+        }
+    }
+    public static final int ZOOM_STEP = 2;
+    public void updateZoomParams(boolean isUp){
+        if(mParameters != null) {
+            if(!mParameters.isZoomSupported()){
+                Log.e(TAG,"Don't support zoom !");
+                return;
+            }
+            int maxZoom = mParameters.getMaxZoom();
+            int curValue = mParameters.getZoom();
+            int newValue;
+            if(isUp){
+                newValue = curValue + ZOOM_STEP;
+                if(newValue>maxZoom){
+                    newValue = maxZoom;
+                }
+            }else{
+                newValue = curValue - ZOOM_STEP;
+                if(newValue<0){
+                    newValue = 0;
+                }
+            }
+
+            mParameters.setZoom(newValue);
         }
     }
     public void writeSettingsValue(String key, String value){
