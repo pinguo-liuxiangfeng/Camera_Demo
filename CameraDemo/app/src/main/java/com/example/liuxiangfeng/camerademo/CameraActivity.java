@@ -2,6 +2,7 @@ package com.example.liuxiangfeng.camerademo;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
 
@@ -10,10 +11,12 @@ import android.preference.Preference;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import com.example.liuxiangfeng.camerademo.utils.Util;
 
 import java.io.IOException;
+
 
 
 public class CameraActivity extends Activity implements CameraFragment.onBtnClickedListener,
@@ -22,6 +25,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
 {
 
     private static final String TAG = "CameraActivity";
+    private Context mContext;
     private Camera mCamera;
     private int mCameraId;
     private Camera.Parameters mParams;
@@ -40,6 +44,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_camera);
 //        // Create an instance of Camera
 //        mCameraDevice = CameraOperation.getInstance().getCameraInstance();
@@ -361,6 +366,26 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
         mSettings.updateFocusModeParams();
         if(mCamera != null) {
             mCamera.setParameters(mSettings.getmParameters());
+        }
+    }
+    public void autoFocus(){
+        if(mCamera != null) {
+            mCamera.autoFocus(mAutoFocusCallback);
+        }
+    }
+    private final AutoFocusCallback mAutoFocusCallback =
+            new AutoFocusCallback();
+    // 处理自动对焦
+    private final class AutoFocusCallback
+            implements android.hardware.Camera.AutoFocusCallback {
+        public void onAutoFocus(
+                boolean focused, android.hardware.Camera camera) {
+            Log.d(TAG,"onAutoFocus, focused="+focused);
+            if(focused){
+                mCameraFragment.updateFocusUI(focused);
+            }else{
+                Toast.makeText(mContext, "focus error", Toast.LENGTH_SHORT);
+            }
         }
     }
     /**

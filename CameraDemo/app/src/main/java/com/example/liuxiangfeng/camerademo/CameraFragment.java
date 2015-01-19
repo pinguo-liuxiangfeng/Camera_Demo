@@ -3,9 +3,11 @@ package com.example.liuxiangfeng.camerademo;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -75,8 +77,10 @@ public class CameraFragment extends Fragment {
         captureButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mActivity.setFocusMode();
+                mActivity.autoFocus();
+//                updateFocusUI(false);
                 mProgressBar.setVisibility(View.VISIBLE);
+
                 return false;
             }
         });
@@ -109,5 +113,14 @@ public class CameraFragment extends Fragment {
         });
 
     }
-
+    public void updateFocusUI(boolean focused){
+//        Drawable mfocused = getResources().getDrawable(R.drawable.progress_circle_focused);
+//        Log.d(TAG, "updateFocusUI, mfocused=" + mfocused);
+//        if(true) {
+//            mProgressBar.setIndeterminateDrawable(mfocused);
+//            mProgressBar.setProgressDrawable(mfocused);
+//        }else{
+//            mProgressBar.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_circle));
+//        }
+    }
 }
