@@ -10,7 +10,11 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.liuxiangfeng.camerademo.utils.Util;
@@ -41,10 +45,21 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     private Preference mPictureSizePref;
     private boolean isInitialedFlag = false;
 
+    private static final int PREVIEW_STOPPED = 0;
+    private static final int IDLE = 1;  // preview is active
+    // Focus is in progress. The exact focus state is in Focus.java.
+    private static final int FOCUSING = 2;
+    private static final int SNAPSHOT_IN_PROGRESS = 3;
+    private int mCameraState = PREVIEW_STOPPED;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        //去除title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//去掉Activity上面的状态栏
+        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
 //        // Create an instance of Camera
 //        mCameraDevice = CameraOperation.getInstance().getCameraInstance();
@@ -222,7 +237,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
      */
     public void doStartPreview(SurfaceHolder holder){
         Log.i(TAG, "doStartPreview...");
-        if(isPreviewing){
+        if(PREVIEW_STOPPED != mCameraState){
             mCamera.stopPreview();
             return;
         }
@@ -247,17 +262,19 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
                     + ", Height = " + mParams.getPictureSize().height);
 //            CamParaUtil.printSupportPreviewSize(mParams);
 //            CamParaUtil.printSupportPictureSize(mParams);
+            mCameraState = IDLE;
         }
+
     }
     /**
      * stop preview
      **/
     public void doStopPreview(){
         Log.d(TAG,"doStopPreview");
-        if(null != mCamera) {
+        if((null != mCamera)&& (mCameraState != PREVIEW_STOPPED)) {
             mCamera.stopPreview();
         }
-        isPreviewing = false;
+        mCameraState = PREVIEW_STOPPED;
     }
     /**
      * open thread.
@@ -309,9 +326,15 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     /**
      * take pictures
      **/
+    private Object isTakingPicture = new Object();
     public void doTakePicture(){
         Log.d(TAG, "doTakePicture..");
+        if (mCameraState == SNAPSHOT_IN_PROGRESS || mCamera == null) {
+            return;
+        }
         mCamera.takePicture(mShutterCallback, mRowPicture, mPicture);
+        mCameraState = SNAPSHOT_IN_PROGRESS;
+
     }
     private Camera.ShutterCallback mShutterCallback = new ShutterCallback();
     private Camera.PictureCallback mRowPicture = new RawPictureCallback();
@@ -371,6 +394,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     public void autoFocus(){
         if(mCamera != null) {
             mCamera.autoFocus(mAutoFocusCallback);
+            mCameraState = FOCUSING;
         }
     }
     private final AutoFocusCallback mAutoFocusCallback =
@@ -381,6 +405,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
         public void onAutoFocus(
                 boolean focused, android.hardware.Camera camera) {
             Log.d(TAG,"onAutoFocus, focused="+focused);
+            mCameraState = IDLE;
             if(focused){
                 mCameraFragment.updateFocusUI(focused);
             }else{
@@ -433,5 +458,13 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
         }
         return super.onKeyDown(keyCode, event);
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG,"onTouchEvent, event.getAction()="+event.getAction());
+        if((!mCameraFragment.isHidden())&&(event.getAction()==MotionEvent.ACTION_DOWN)){
+            mCameraFragment.updateZoomSeekbar(View.VISIBLE);
+        }
 
+        return super.onTouchEvent(event);
+    }
 }

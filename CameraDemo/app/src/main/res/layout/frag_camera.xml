@@ -19,9 +19,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/progress_circle"
             android:layout_weight="8"
             android:visibility="invisible"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_circle"
             />
         <SeekBar
             android:id="@+id/zoom_seekbar"
@@ -29,6 +30,7 @@
             android:paddingRight="50dip"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="50dip"
             />
         <FrameLayout
             android:layout_width="fill_parent"
@@ -42,17 +44,17 @@
                 />
             <Button
                 android:id="@+id/button_capture"
-                android:text="Capture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:background="@drawable/capture_btn"
                 />
             <ImageButton
                 android:id="@+id/setting"
                 android:src="@drawable/ic_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="20dip"
                 />
         </FrameLayout>
