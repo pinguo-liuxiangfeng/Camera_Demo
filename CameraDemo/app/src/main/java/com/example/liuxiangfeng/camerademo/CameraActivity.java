@@ -51,7 +51,6 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     private static final int FOCUSING = 2;
     private static final int SNAPSHOT_IN_PROGRESS = 3;
     private int mCameraState = PREVIEW_STOPPED;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +63,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
 //        // Create an instance of Camera
 //        mCameraDevice = CameraOperation.getInstance().getCameraInstance();
 
+        
         // 开启线程来启动摄像头
         mCameraOpenThread.start();
         Log.d(TAG, "onCreate, mCameraDevice=" + mCamera);
