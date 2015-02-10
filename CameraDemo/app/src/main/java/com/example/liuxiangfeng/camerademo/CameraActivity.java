@@ -44,7 +44,6 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     private SettingFragment mSettingFragment;
     private Preference mPictureSizePref;
     private boolean isInitialedFlag = false;
-
     private static final int PREVIEW_STOPPED = 0;
     private static final int IDLE = 1;  // preview is active
     // Focus is in progress. The exact focus state is in Focus.java.
