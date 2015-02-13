@@ -54,6 +54,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     //test for git on branch 1.
     //test for git on branch 1.
     //test for git on branch 1.
+    //test for git on branch 1.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
