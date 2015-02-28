@@ -65,6 +65,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     //test for auto merge 2 on master
 
     //test for auto merge 1 on test
+    //test for auto merge 3 on test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
