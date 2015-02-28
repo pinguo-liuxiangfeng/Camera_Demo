@@ -62,7 +62,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     //test for auto merge 4
     //test for auto merge 5
     //test for auto merge 1 on master
-
+    //test for auto merge 2 on master
 
     //test for auto merge 1 on test
     @Override
