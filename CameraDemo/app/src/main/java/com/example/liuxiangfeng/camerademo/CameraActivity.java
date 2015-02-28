@@ -51,7 +51,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     private static final int SNAPSHOT_IN_PROGRESS = 3;
     private int mCameraState = PREVIEW_STOPPED;
 
-    //test for git stash
+    //test for pull request
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
