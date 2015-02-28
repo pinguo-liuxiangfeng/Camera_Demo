@@ -53,9 +53,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
 
     //test for git on branch 1.
     //test for git on branch 2.
-    //test for git on branch 1.
-    //test for git on branch 1.
-    //test for git on branch 1.
+    //
     //test for pull request
     //test for auto merge 1
     //test for auto merge 2
