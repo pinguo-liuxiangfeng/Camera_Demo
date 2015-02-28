@@ -53,7 +53,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
 
     //test for pull request
     //test for auto merge 1
-    
+    //test for auto merge 2
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
