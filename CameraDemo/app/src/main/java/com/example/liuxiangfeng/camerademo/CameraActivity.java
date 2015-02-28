@@ -69,6 +69,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        //test for auto merge 2 on test
         //去除title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //去掉Activity上面的状态栏
