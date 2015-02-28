@@ -52,6 +52,7 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     private int mCameraState = PREVIEW_STOPPED;
 
     //test for pull request
+    //test for auto merge 1
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
