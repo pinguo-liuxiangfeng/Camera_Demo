@@ -61,10 +61,16 @@ public class CameraActivity extends Activity implements CameraFragment.onBtnClic
     //test for auto merge 3
     //test for auto merge 4
     //test for auto merge 5
+    //test for auto merge 1 on master
+    //test for auto merge 2 on master
+
+    //test for auto merge 1 on test
+    //test for auto merge 3 on test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        //test for auto merge 2 on test
         //去除title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //去掉Activity上面的状态栏
