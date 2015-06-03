@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.liuxiangfeng.arcseekbar.ParameterAdvanceSettingView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#ffcc33"
+    >
+
+    <!--
+    <com.pinguo.camera360.camera.view.HoldTouchEventView
+        android:id="@+id/param_advance_hold_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+-->
+    <LinearLayout
+        android:id="@+id/camera_adv_tip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="40dp">
+
+        <TextView
+            android:id="@+id/camera_adv_tips_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#d3ffffff"
+            android:textSize="14dp"
+            android:visibility="invisible" />
+<!--
+        <TextView
+            android:id="@+id/camera_adv_tips_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/adv_parameter_tip_text_size"
+            android:visibility="invisible" />
+-->
+    </LinearLayout>
+
+    <!--
+    <com.pinguo.camera360.camera.view.arcseekbar.SectorDrawable
+        android:id="@+id/sector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible" />
+-->
+    <LinearLayout
+        android:id="@+id/arc_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        tools:ignore="UnusedAttribute">
+
+        <com.example.liuxiangfeng.arcseekbar.ArcSeekBar
+            android:id="@+id/camera_adv_focus_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="3dp"
+            android:visibility="invisible"/>
+
+        <com.example.liuxiangfeng.arcseekbar.ArcSeekBar
+            android:id="@+id/camera_adv_white_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="3dp"
+            android:visibility="invisible"/>
+
+        <com.example.liuxiangfeng.arcseekbar.ArcSeekBar
+            android:id="@+id/camera_adv_iso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="3dp"
+            android:visibility="invisible"/>
+
+        <com.example.liuxiangfeng.arcseekbar.ArcSeekBar
+            android:id="@+id/camera_adv_exposure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="3dp"
+            android:visibility="invisible"/>
+
+        <com.example.liuxiangfeng.arcseekbar.ArcSeekBar
+            android:id="@+id/camera_adv_sharpness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="3dp"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+</com.example.liuxiangfeng.arcseekbar.ParameterAdvanceSettingView>
+

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Android-Demo</string>
+    <string name="press_again_to_quit">再次返回退出程序</string>
+    <string name="hello_world">hello world</string>
+</resources>
